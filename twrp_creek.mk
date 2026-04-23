@@ -16,7 +16,7 @@ $(call inherit-product, vendor/omni/config/common.mk)
 $(call inherit-product, device/xiaomi/creek/device.mk)
 
 PRODUCT_DEVICE := creek
-PRODUCT_NAME := omni_creek
+PRODUCT_NAME := twrp_creek
 PRODUCT_BRAND := Redmi
 PRODUCT_MODEL := Redmi 15 4G
 PRODUCT_MANUFACTURER := xiaomi
