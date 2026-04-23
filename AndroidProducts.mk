@@ -9,6 +9,6 @@ PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/twrp_creek.mk
 
 COMMON_LUNCH_CHOICES := \
-    omni_creek-user \
-    omni_creek-userdebug \
-    omni_creek-eng
+    twrp_creek-user \
+    twrp_creek-userdebug \
+    twrp_creek-eng
