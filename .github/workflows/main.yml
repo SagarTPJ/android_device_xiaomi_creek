@@ -4,10 +4,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+    - name: Checkout Device Tree
+      uses: actions/checkout@v4
+      with:
+        path: twrp/device/xiaomi/creek
 
     - name: Cleanup and Install Build Tools
       run: |
@@ -16,24 +18,20 @@ jobs:
         
     - name: Install Repo Tool
       run: |
-        mkdir ~/bin
+        mkdir -p ~/bin
         curl https://googleapis.com > ~/bin/repo
         chmod a+x ~/bin/repo
         sudo ln -sf ~/bin/repo /usr/bin/repo
 
     - name: Initialize TWRP Source
       run: |
-        mkdir twrp
+        mkdir -p twrp
         cd twrp
         git config --global user.name "Your Name"
         git config --global user.email "your@email.com"
+        # We use twrp-12.1 as it is the most stable base for Android 15/16 recoveries
         repo init --depth=1 -u https://github.com -b twrp-12.1
         repo sync -j$(nproc --all)
-
-    - name: Clone Device Tree
-      run: |
-        cd twrp
-        git clone https://github.com{{ github.repository }} device/xiaomi/creek
 
     - name: Build TWRP
       run: |
@@ -44,7 +42,7 @@ jobs:
         mka recoveryimage -j$(nproc --all)
 
     - name: Upload Recovery Image
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: TWRP-Redmi15-Creek
         path: twrp/out/target/product/creek/*.img
