@@ -30,7 +30,7 @@ jobs:
         git config --global user.name "Your Name"
         git config --global user.email "your@email.com"
         # We add --no-repo-verify to stop the 'sysadmin' update error
-        repo init --no-repo-verify --depth=1 -u repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
+        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Build TWRP
