@@ -17,21 +17,11 @@ jobs:
         sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
         sudo apt-get autoremove -y
         sudo apt-get clean
-        echo "Final Disk Space:"
-        df -h /
 
     - name: Install Build Tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y bc build-essential zip curl libstdc++6 git python3 python-is-python3
-
-    - name: Install Repo Tool
-      run: |
-        mkdir -p ~/bin
-        # Using a stable mirror with retry logic in case of DNS issues
-        curl --retry 5 --retry-delay 5 https://githubusercontent.com > ~/bin/repo
-        chmod a+x ~/bin/repo
-        sudo ln -sf ~/bin/repo /usr/bin/repo
+        sudo apt-get install -y bc build-essential zip curl libstdc++6 git python3 python-is-python3 repo
 
     - name: Initialize TWRP Source
       run: |
@@ -39,8 +29,9 @@ jobs:
         cd twrp
         git config --global user.name "Your Name"
         git config --global user.email "your@email.com"
-        python3 /usr/bin/repo init --depth=1 -u https://github.com -b twrp-12.1
-        python3 /usr/bin/repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+        # Using the system-installed 'repo' command directly
+        repo init --depth=1 -u https://github.com -b twrp-12.1
+        repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Build TWRP
       run: |
