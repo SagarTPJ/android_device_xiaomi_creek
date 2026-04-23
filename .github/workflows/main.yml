@@ -1,6 +1,6 @@
 name: Build TWRP for Redmi 15 4G
 on:
-  workflow_dispatch: # Allows you to start the build manually
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,10 +11,19 @@ jobs:
       with:
         path: twrp/device/xiaomi/creek
 
+    - name: Maximize Build Space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+
     - name: Cleanup and Install Build Tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y bc build-essential zip curl libstdc++6 git python3 python2
+        sudo apt-get install -y bc build-essential zip curl libstdc++6 git python3 python-is-python3
         
     - name: Install Repo Tool
       run: |
@@ -29,7 +38,6 @@ jobs:
         cd twrp
         git config --global user.name "Your Name"
         git config --global user.email "your@email.com"
-        # We use twrp-12.1 as it is the most stable base for Android 15/16 recoveries
         repo init --depth=1 -u https://github.com -b twrp-12.1
         repo sync -j$(nproc --all)
 
