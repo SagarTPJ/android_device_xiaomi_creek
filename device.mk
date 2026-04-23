@@ -7,6 +7,9 @@
 
 LOCAL_PATH := device/xiaomi/creek
 
+# Inherit from TWRP common config (Fixes the 'vendor/omni' error)
+$(call inherit-product, vendor/twrp/config/common.mk)
+
 # A/B - Postinstall configuration
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -14,7 +17,7 @@ AB_OTA_POSTINSTALL_CONFIG += \
     FILESYSTEM_TYPE_system=erofs \
     POSTINSTALL_OPTIONAL_system=true
 
-# Boot Control HAL (Modernized for Android 12.1+ Build System)
+# Boot Control HAL
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-impl \
     android.hardware.boot@1.2-service \
@@ -22,8 +25,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     bootctrl.creek
-
-# Removed PRODUCT_STATIC_BOOT_CONTROL_HAL as it is obsolete in Android 12+
 
 # Update Engine and Sideloading
 PRODUCT_PACKAGES += \
