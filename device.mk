@@ -6,30 +6,33 @@
 #
 
 LOCAL_PATH := device/xiaomi/creek
-# A/B
+
+# A/B - Postinstall configuration
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
-    FILESYSTEM_TYPE_system=ext4 \
+    FILESYSTEM_TYPE_system=erofs \
     POSTINSTALL_OPTIONAL_system=true
 
-# Boot control HAL
+# Boot Control HAL (Modernized for Android 12.1+ Build System)
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.0-impl \
-    android.hardware.boot@1.0-service
+    android.hardware.boot@1.2-impl \
+    android.hardware.boot@1.2-service \
+    android.hardware.boot@1.2-service.recovery
 
 PRODUCT_PACKAGES += \
-    bootctrl.bengal
+    bootctrl.creek
 
-PRODUCT_STATIC_BOOT_CONTROL_HAL := \
-    bootctrl.bengal \
-    libgptutils \
-    libz \
-    libcutils
+# Removed PRODUCT_STATIC_BOOT_CONTROL_HAL as it is obsolete in Android 12+
 
+# Update Engine and Sideloading
 PRODUCT_PACKAGES += \
     otapreopt_script \
     cppreopts.sh \
     update_engine \
     update_verifier \
-    update_engine_sideload
+    update_engine_sideload \
+    checkpoint_gc
+
+# Dynamic Partitions
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
