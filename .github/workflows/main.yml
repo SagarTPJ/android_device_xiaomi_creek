@@ -1,0 +1,50 @@
+name: Build TWRP for Redmi 15 4G
+on:
+  workflow_dispatch: # Allows you to start the build manually
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Cleanup and Install Build Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y bc build-essential zip curl libstdc++6 git python3 python2
+        
+    - name: Install Repo Tool
+      run: |
+        mkdir ~/bin
+        curl https://googleapis.com > ~/bin/repo
+        chmod a+x ~/bin/repo
+        sudo ln -sf ~/bin/repo /usr/bin/repo
+
+    - name: Initialize TWRP Source
+      run: |
+        mkdir twrp
+        cd twrp
+        git config --global user.name "Your Name"
+        git config --global user.email "your@email.com"
+        repo init --depth=1 -u https://github.com -b twrp-12.1
+        repo sync -j$(nproc --all)
+
+    - name: Clone Device Tree
+      run: |
+        cd twrp
+        git clone https://github.com{{ github.repository }} device/xiaomi/creek
+
+    - name: Build TWRP
+      run: |
+        cd twrp
+        export ALLOW_MISSING_DEPENDENCIES=true
+        source build/envsetup.sh
+        lunch omni_creek-eng
+        mka recoveryimage -j$(nproc --all)
+
+    - name: Upload Recovery Image
+      uses: actions/upload-artifact@v3
+      with:
+        name: TWRP-Redmi15-Creek
+        path: twrp/out/target/product/creek/*.img
