@@ -28,7 +28,8 @@ jobs:
     - name: Install Repo Tool
       run: |
         mkdir -p ~/bin
-        curl https://googleapis.com > ~/bin/repo
+        # Using a GitHub mirror for 'repo' to avoid Google's bot detection errors
+        curl https://githubusercontent.com > ~/bin/repo
         chmod a+x ~/bin/repo
         sudo ln -sf ~/bin/repo /usr/bin/repo
 
@@ -38,7 +39,7 @@ jobs:
         cd twrp
         git config --global user.name "Your Name"
         git config --global user.email "your@email.com"
-        # Using python3 to run repo prevents HTML/Bash syntax errors
+        # Force python3 to run the repo script
         python3 /usr/bin/repo init --depth=1 -u https://github.com -b twrp-12.1
         python3 /usr/bin/repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
