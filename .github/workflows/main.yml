@@ -29,9 +29,9 @@ jobs:
         cd twrp
         git config --global user.name "Your Name"
         git config --global user.email "your@email.com"
-        # Using the system-installed 'repo' command directly
-        repo init --depth=1 -u https://github.com -b twrp-12.1
-        repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+        # We add --no-repo-verify to stop the 'sysadmin' update error
+        repo init --no-repo-verify --depth=1 -u https://github.com -b twrp-12.1
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Build TWRP
       run: |
