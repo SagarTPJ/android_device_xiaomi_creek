@@ -44,6 +44,7 @@ jobs:
           lunch twrp_creek-eng
           # Target both in case the tree supports either
           rm -rf out/target/product/creek/recovery/root/vendor
+          rm -rf out/target/product/creek/recovery/root/system
           mka recoveryimage -j$(nproc --all)
 
       - name: Upload Artifacts
