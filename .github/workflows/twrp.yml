@@ -1,0 +1,31 @@
+      - name: Sync and Build
+        shell: bash
+        run: |
+          # 1. Install Repo tool correctly
+          sudo apt-get update
+          sudo apt-get install repo -y
+
+          # 2. Setup Repo and Sync
+          mkdir -p twrp
+          cd twrp
+          repo init --depth=1 -u https://github.com -b twrp-14.1
+          repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+          # 3. Add your device tree
+          mkdir -p device/xiaomi/creek
+          cp -av $GITHUB_WORKSPACE/[!t]* device/xiaomi/creek/
+
+          # 4. Critical File Check
+          if [ ! -f device/xiaomi/creek/twrp_creek.mk ]; then
+            echo "ERROR: twrp_creek.mk not found!"
+            ls -la device/xiaomi/creek/
+            exit 1
+          fi
+
+          # 5. Build Environment
+          export ALLOW_MISSING_DEPENDENCIES=true
+          source build/envsetup.sh
+          
+          # 6. Lunch and Build
+          lunch twrp_creek-ap2a-eng
+          mka recoveryimage -j4
