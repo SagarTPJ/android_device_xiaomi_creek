@@ -26,7 +26,11 @@ jobs:
           mkdir -p device/xiaomi/creek
           cp -av $GITHUB_WORKSPACE/[!t]* device/xiaomi/creek/
 
-          # Ensure the makefile uses the correct inheritance
+          # PRE-BUILD FIX: Remove physical directories that block symlinks
+          rm -rf device/xiaomi/creek/recovery/root/vendor
+          rm -rf device/xiaomi/creek/recovery/root/system
+
+          # Ensure the makefile uses the correct inheritance and API level
           cat <<EOF > device/xiaomi/creek/twrp_creek.mk
           \$(call inherit-product, \$(SRC_TARGET_DIR)/product/core_64_bit.mk)
           \$(call inherit-product, \$(SRC_TARGET_DIR)/product/full_base_telephony.mk)
@@ -37,14 +41,17 @@ jobs:
           PRODUCT_BRAND := Xiaomi
           PRODUCT_MODEL := Redmi 15 4G
           PRODUCT_MANUFACTURER := xiaomi
+          PRODUCT_SHIPPING_API_LEVEL := 32
           EOF
 
           export ALLOW_MISSING_DEPENDENCIES=true
           source build/envsetup.sh
           lunch twrp_creek-eng
-          # Target both in case the tree supports either
+          
+          # BUILD-TIME FIX: Clear output paths just in case
           rm -rf out/target/product/creek/recovery/root/vendor
           rm -rf out/target/product/creek/recovery/root/system
+          
           mka recoveryimage -j$(nproc --all)
 
       - name: Upload Artifacts
