@@ -1,0 +1,8 @@
+    - name: Build TWRP
+      run: |
+        cd twrp
+        export ALLOW_MISSING_DEPENDENCIES=true
+        source build/envsetup.sh
+        lunch twrp_creek-trunk_staging-eng
+        mka recoveryimage -j$(nproc --all)
+      shell: bash
