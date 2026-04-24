@@ -1,8 +1,8 @@
-# Virtual A/B
+# Inherit Virtual A/B
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 
-# Shipping API
-PRODUCT_SHIPPING_API_LEVEL := 34
+# Set shipping level to 35 (Android 15)
+PRODUCT_SHIPPING_API_LEVEL := 35
 
 # Fastbootd
 PRODUCT_PACKAGES += \
