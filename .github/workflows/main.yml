@@ -34,5 +34,6 @@ jobs:
           source build/envsetup.sh
           
           # 5. Lunch and Build
-          lunch twrp_creek-trunk_staging-eng
+          lunch twrp_creek-ap2a-eng
           mka recoveryimage -j4
+
