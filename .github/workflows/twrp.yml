@@ -43,7 +43,7 @@ jobs:
           source build/envsetup.sh
           lunch twrp_creek-eng
           # Target both in case the tree supports either
-          mka recoveryimage vendor_bootimage -j$(nproc --all)
+          mka recoveryimage -j$(nproc --all)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
