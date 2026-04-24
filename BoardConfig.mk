@@ -19,7 +19,6 @@ AB_OTA_PARTITIONS += \
     system_ext \
     odm
 BOARD_USES_RECOVERY_AS_BOOT := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 # Architecture
 TARGET_ARCH := arm64
