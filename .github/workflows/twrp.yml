@@ -41,7 +41,7 @@ jobs:
 
           export ALLOW_MISSING_DEPENDENCIES=true
           source build/envsetup.sh
-          lunch twrp_creek-ap2a-eng
+          lunch twrp_creek-eng
           # Target both in case the tree supports either
           mka recoveryimage vendor_bootimage -j$(nproc --all)
 
