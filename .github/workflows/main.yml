@@ -1,16 +1,33 @@
-    - name: Sync and Build
-      shell: bash
-      run: |
-        # 1. Setup Repo and Sync (if not already done in a previous step)
-        mkdir -p twrp
-        cd twrp
-        repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-14.1
-        repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+name: Recovery Build
 
-        # 2. Build Environment
-        export ALLOW_MISSING_DEPENDENCIES=true
-        source build/envsetup.sh
-        
-        # 3. Lunch and Build
-        lunch twrp_creek-trunk_staging-eng
-        mka recoveryimage -j4
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync and Build
+        shell: bash
+        run: |
+          # 1. Setup Repo and Sync
+          mkdir -p twrp
+          cd twrp
+          repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-14.1
+          repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+          # 2. Add your device tree (Make sure this path is correct)
+          # If your tree is in the current repo, you might need to move it into the sync'd twrp folder
+          mkdir -p device/xiaomi/creek
+          cp -r ../* device/xiaomi/creek/ || true
+
+          # 3. Build Environment
+          export ALLOW_MISSING_DEPENDENCIES=true
+          source build/envsetup.sh
+          
+          # 4. Lunch and Build
+          lunch twrp_creek-trunk_staging-eng
+          mka recoveryimage -j4
