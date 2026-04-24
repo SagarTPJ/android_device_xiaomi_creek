@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2026 The Android Open Source Project
-# Copyright (C) 2026 SebaUbuntu's TWRP device tree generator
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
 DEVICE_PATH := device/xiaomi/creek
 
 # Architecture
@@ -46,7 +39,6 @@ BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := false
 
 # Platform & SDK (Bypassing TWRP 12.1 Version Checks)
 TARGET_BOARD_PLATFORM := creek
-PRODUCT_SHIPPING_API_LEVEL := 32
 BOARD_SYSTEMSDK_VERSIONS := 32
 PLATFORM_VERSION := 16
 PLATFORM_VERSION_LAST_STABLE := 15
