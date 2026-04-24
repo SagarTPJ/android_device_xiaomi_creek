@@ -14,3 +14,6 @@ PRODUCT_NAME := twrp_creek
 PRODUCT_BRAND := Xiaomi
 PRODUCT_MODEL := POCO M7
 PRODUCT_MANUFACTURER := xiaomi
+
+# Set the Shipping API level to satisfy the TWRP 12.1 build system
+PRODUCT_SHIPPING_API_LEVEL := 32
