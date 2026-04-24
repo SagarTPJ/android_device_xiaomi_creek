@@ -64,3 +64,6 @@ BOARD_USES_METADATA_PARTITION := true
 # Workaround for modern property namespaces
 BUILD_BROKEN_VENDOR_PROPERTY_NAMESPACE := true
 BUILD_BROKEN_DUP_RULES := true
+
+BOARD_ROOT_EXTRA_SYMLINKS := /vendor /mnt/vendor /system/bin/linker:/system/bin/linker64
+
