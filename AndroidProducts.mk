@@ -2,4 +2,6 @@ PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/twrp_creek.mk
 
 COMMON_LUNCH_CHOICES := \
-    twrp_creek-ap2a-eng
+    twrp_creek-eng \
+    twrp_creek-userdebug
+
