@@ -43,6 +43,7 @@ jobs:
           source build/envsetup.sh
           lunch twrp_creek-eng
           # Target both in case the tree supports either
+          rm -rf out/target/product/creek/recovery/root/vendor
           mka recoveryimage -j$(nproc --all)
 
       - name: Upload Artifacts
