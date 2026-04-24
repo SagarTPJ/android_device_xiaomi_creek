@@ -1,51 +1,32 @@
-#
-# Copyright (C) 2026 The Android Open Source Project
-# Copyright (C) 2026 SebaUbuntu's TWRP device tree generator
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
 DEVICE_PATH := device/xiaomi/creek
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
 
-# A/B - Virtual A/B
-AB_OTA_UPDATER := true
-AB_OTA_PARTITIONS += \
-    product \
-    vendor \
-    system \
-    system_ext \
-    odm
-
-# Recovery Partition Configuration
-# Set to false because you are using a dedicated recovery.img partition
-BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_HAS_NO_VENDOR_BOOT := true
-
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_ABI2 := 
 TARGET_CPU_VARIANT := generic
-
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv7-a-neon
 TARGET_2ND_CPU_ABI := armeabi-v7a
-TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := generic
+
+# APEX
+DEXPREOPT_GENERATE_APEX_IMAGE := true
+
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME := creek
+TARGET_NO_BOOTLOADER := true
 
 # Kernel
 BOARD_BOOTIMG_HEADER_VERSION := 4
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 BOARD_KERNEL_PAGESIZE := 4096
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 BOARD_KERNEL_IMAGE_NAME := Image
 TARGET_KERNEL_CONFIG := creek_defconfig
 TARGET_KERNEL_SOURCE := kernel/xiaomi/creek
-
-# Kernel - prebuilt
 TARGET_FORCE_PREBUILT_KERNEL := true
 ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
@@ -55,28 +36,35 @@ endif
 BOARD_FLASH_BLOCK_SIZE := 262144
 BOARD_BOOTIMAGE_PARTITION_SIZE := 104857600
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
-# Removed BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE to prevent recovery resource move errors
-
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := erofs
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := erofs
 TARGET_COPY_OUT_VENDOR := vendor
+
+# Dynamic Partitions
 BOARD_SUPER_PARTITION_SIZE := 9126805504 
 BOARD_SUPER_PARTITION_GROUPS := xiaomi_dynamic_partitions
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor odm product
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 9122611200 
 
+# A/B - Virtual A/B
+AB_OTA_UPDATER := true
+AB_OTA_PARTITIONS += product vendor system system_ext odm
+BOARD_USES_RECOVERY_AS_BOOT := false
+BOARD_HAS_NO_VENDOR_BOOT := true
+
 # Platform
 TARGET_BOARD_PLATFORM := creek
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 
-# Security Patch & Version (Android 16)
+# Security Patch & Version
 PLATFORM_VERSION := 16
 PLATFORM_VERSION_LAST_STABLE := 15
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 
-# Sepolicy (Updated for Android 16 deprecation)
+# Sepolicy Fixes for Android 16
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 
