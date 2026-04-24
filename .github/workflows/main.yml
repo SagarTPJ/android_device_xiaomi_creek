@@ -1,20 +1,16 @@
-name: Recovery Build
+    - name: Sync and Build
+      shell: bash
+      run: |
+        # 1. Setup Repo and Sync (if not already done in a previous step)
+        mkdir -p twrp
+        cd twrp
+        repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-14.1
+        repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
-on:
-  workflow_dispatch: # Allows you to run it manually
-
-jobs:
-  build:
-    runs-on: ubuntu-22.04 # Or your preferred runner
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build TWRP
-        shell: bash
-        run: |
-          cd twrp
-          export ALLOW_MISSING_DEPENDENCIES=true
-          source build/envsetup.sh
-          lunch twrp_creek-trunk_staging-eng
-          mka recoveryimage -j4
+        # 2. Build Environment
+        export ALLOW_MISSING_DEPENDENCIES=true
+        source build/envsetup.sh
+        
+        # 3. Lunch and Build
+        lunch twrp_creek-trunk_staging-eng
+        mka recoveryimage -j4
