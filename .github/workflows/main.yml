@@ -1,21 +1,9 @@
-name: Recovery Build
-
-on:
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Sync and Build
         shell: bash
         run: |
           # 1. Install Repo tool
           mkdir -p ~/bin
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          curl https://googleapis.com > ~/bin/repo
           chmod a+x ~/bin/repo
           export PATH=~/bin:$PATH
 
@@ -26,14 +14,21 @@ jobs:
           repo sync -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
           # 3. Add your device tree
+          # We use GITHUB_WORKSPACE to ensure we grab your repo files
           mkdir -p device/xiaomi/creek
-          cp -r ../[!t]* device/xiaomi/creek/ || true
+          cp -av $GITHUB_WORKSPACE/[!t]* device/xiaomi/creek/
 
-          # 4. Build Environment
+          # 4. Critical File Check
+          if [ ! -f device/xiaomi/creek/twrp_creek.mk ]; then
+            echo "ERROR: twrp_creek.mk not found in device/xiaomi/creek/"
+            ls -la device/xiaomi/creek/
+            exit 1
+          fi
+
+          # 5. Build Environment
           export ALLOW_MISSING_DEPENDENCIES=true
           source build/envsetup.sh
           
-          # 5. Lunch and Build
+          # 6. Lunch and Build
           lunch twrp_creek-ap2a-eng
           mka recoveryimage -j4
-
