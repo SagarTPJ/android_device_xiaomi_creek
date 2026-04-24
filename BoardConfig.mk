@@ -13,13 +13,6 @@ TARGET_2ND_ARCH_VARIANT := armv7-a-neon
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_VARIANT := generic
 
-# APEX
-DEXPREOPT_GENERATE_APEX_IMAGE := true
-
-# Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := creek
-TARGET_NO_BOOTLOADER := true
-
 # Kernel
 BOARD_BOOTIMG_HEADER_VERSION := 4
 BOARD_KERNEL_PAGESIZE := 4096
@@ -48,23 +41,22 @@ BOARD_SUPER_PARTITION_GROUPS := xiaomi_dynamic_partitions
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor odm product
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 9122611200 
 
-# A/B - Virtual A/B
+# A/B & Recovery Partitioning
 AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS += product vendor system system_ext odm
 BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_HAS_NO_VENDOR_BOOT := true
 
-# Platform
+# Platform & SDK Versions
 TARGET_BOARD_PLATFORM := creek
-TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
-
-# Security Patch & Version
+# Fix: Ensure SDK versions match or exceed launch level (35 for Android 15)
+BOARD_SYSTEMSDK_VERSIONS := 35 36
 PLATFORM_VERSION := 16
 PLATFORM_VERSION_LAST_STABLE := 15
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 
-# Sepolicy Fixes for Android 16
+# Sepolicy (Android 16 Requirement)
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 
@@ -72,9 +64,7 @@ SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 TW_THEME := portrait_hdpi
 TW_EXTRA_LANGUAGES := true
 TW_SCREEN_BLANK_ON_BOOT := true
-TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_USE_TOOLBOX := true
-TW_INCLUDE_REPACKTOOLS := true
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
