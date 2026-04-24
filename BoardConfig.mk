@@ -46,10 +46,14 @@ BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := false
 
 # Platform & SDK (Bypassing TWRP 12.1 Version Checks)
 TARGET_BOARD_PLATFORM := creek
-# BOARD_SYSTEMSDK_VERSIONS := 34
+PRODUCT_SHIPPING_API_LEVEL := 32
+BOARD_SYSTEMSDK_VERSIONS := 32
 PLATFORM_VERSION := 16
 PLATFORM_VERSION_LAST_STABLE := 15
 TARGET_SKIP_OTAPREOPT := true
+
+# Fix for "could not make way for new symlink: root/vendor"
+BOARD_ROOT_EXTRA_SYMLINKS := /vendor /mnt/vendor /system/bin/linker:/system/bin/linker64
 
 # TWRP Configuration
 TW_THEME := portrait_hdpi
@@ -64,3 +68,7 @@ TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
 BOARD_USES_METADATA_PARTITION := true
+
+# Workaround for modern property namespaces
+BUILD_BROKEN_VENDOR_PROPERTY_NAMESPACE := true
+BUILD_BROKEN_DUP_RULES := true
