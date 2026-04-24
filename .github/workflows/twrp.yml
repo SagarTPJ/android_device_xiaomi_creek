@@ -10,6 +10,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Maximize Build Space (Nuclear Cleanup)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+
       - name: Sync and Build
         shell: bash
         run: |
@@ -21,6 +26,7 @@ jobs:
           mkdir -p device/xiaomi/creek
           cp -av $GITHUB_WORKSPACE/[!t]* device/xiaomi/creek/
 
+          # Ensure the makefile uses the correct inheritance
           cat <<EOF > device/xiaomi/creek/twrp_creek.mk
           \$(call inherit-product, \$(SRC_TARGET_DIR)/product/core_64_bit.mk)
           \$(call inherit-product, \$(SRC_TARGET_DIR)/product/full_base_telephony.mk)
@@ -29,11 +35,18 @@ jobs:
           PRODUCT_DEVICE := creek
           PRODUCT_NAME := twrp_creek
           PRODUCT_BRAND := Xiaomi
-          PRODUCT_MODEL := POCO M7
+          PRODUCT_MODEL := Redmi 15 4G
           PRODUCT_MANUFACTURER := xiaomi
           EOF
 
           export ALLOW_MISSING_DEPENDENCIES=true
           source build/envsetup.sh
           lunch twrp_creek-ap2a-eng
-          mka recoveryimage -j4
+          # Target both in case the tree supports either
+          mka recoveryimage vendor_bootimage -j$(nproc --all)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWRP-Creek-Image
+          path: twrp/out/target/product/creek/*.img
