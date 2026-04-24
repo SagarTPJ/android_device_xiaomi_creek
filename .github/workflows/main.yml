@@ -1,48 +1,8 @@
-name: Build TWRP for Redmi 15 4G
-on:
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Device Tree
-      uses: actions/checkout@v4
-      with:
-        path: twrp/device/xiaomi/creek
-
-    - name: Nuclear Cleanup (Maximize Disk Space)
-      run: |
-        sudo docker image prune --all --force
-        sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
-        sudo apt-get autoremove -y
-        sudo apt-get clean
-
-    - name: Install Build Tools
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y bc build-essential zip curl libstdc++6 git python3 python-is-python3 repo
-
-    - name: Initialize TWRP Source
-      run: |
-        mkdir -p twrp
-        cd twrp
-        git config --global user.name "Your Name"
-        git config --global user.email "your@email.com"
-        # We add --no-repo-verify to stop the 'sysadmin' update error
-        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-14.1
-        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-
     - name: Build TWRP
       run: |
         cd twrp
         export ALLOW_MISSING_DEPENDENCIES=true
         source build/envsetup.sh
-        twrp_creek-trunk_staging-eng
+        lunch twrp_creek-trunk_staging-eng
         mka recoveryimage -j$(nproc --all)
-
-    - name: Upload Recovery Image
-      uses: actions/upload-artifact@v4
-      with:
-        name: TWRP-Redmi15-Creek
-        path: twrp/out/target/product/creek/*.img
+      shell: bash
