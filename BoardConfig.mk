@@ -13,7 +13,7 @@ TARGET_2ND_ARCH_VARIANT := armv7-a-neon
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_VARIANT := generic
 
-# Kernel
+# Kernel - Header Version 4 is mandatory for Android 15/16
 BOARD_BOOTIMG_HEADER_VERSION := 4
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
@@ -29,34 +29,31 @@ endif
 BOARD_FLASH_BLOCK_SIZE := 262144
 BOARD_BOOTIMAGE_PARTITION_SIZE := 104857600
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
+# Define vendor_boot size but prevent recovery resources from moving there
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 104857600
+
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := erofs
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := erofs
 TARGET_COPY_OUT_VENDOR := vendor
 
-# Dynamic Partitions
-BOARD_SUPER_PARTITION_SIZE := 9126805504 
-BOARD_SUPER_PARTITION_GROUPS := xiaomi_dynamic_partitions
-BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor odm product
-BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 9122611200 
-
-# A/B & Recovery Partitioning
+# A/B & Recovery logic
 AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS += product vendor system system_ext odm
+# Since you have a dedicated recovery.img, set these:
 BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_HAS_NO_VENDOR_BOOT := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := false
 
-# Platform & SDK Versions
+# Platform & SDK - Target 34 (Android 14) to satisfy 14.1 manifest rules
 TARGET_BOARD_PLATFORM := creek
-# Fix: Ensure SDK versions match or exceed launch level (35 for Android 15)
-BOARD_SYSTEMSDK_VERSIONS := 32
+BOARD_SYSTEMSDK_VERSIONS := 34
 PLATFORM_VERSION := 16
 PLATFORM_VERSION_LAST_STABLE := 15
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 
-# Sepolicy (Android 16 Requirement)
+# Sepolicy
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 
