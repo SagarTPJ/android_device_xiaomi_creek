@@ -1,3 +1,11 @@
+name: Recovery Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,7 +27,6 @@
 
           # 3. Add your device tree
           mkdir -p device/xiaomi/creek
-          # Note: We copy from ../ because we are currently inside the 'twrp' folder
           cp -r ../[!t]* device/xiaomi/creek/ || true
 
           # 4. Build Environment
